@@ -1,0 +1,38 @@
+% cvSvdDemo - Demo of use of svd.m as a feature extraction method
+% Singular values (eigenvalues) can be used as features
+% Try to reduce dimensionality and recover pictures
+% Note that PCA method uses projected data as features (and mean subtraction)
+function cvSvdDemo
+ I = imread('image/lena.png');
+ [m n c] = size(I);
+ I = double(I);
+ R = I(:, :, 1);
+ G = I(:, :, 2);
+ B = I(:, :, 3);
+ [RU, RS, RV] = svd(R);
+ % TIPS: RS = svd(R) returns diag(RS) because it is the most important
+ [GU, GS, GV] = svd(G);
+ [BU, BS, BV] = svd(B);
+ RS = diag(RS);
+ GS = diag(GS);
+ BS = diag(BS);
+ D = length(RS);
+ ratio=[1.0 0.10, 0.05, 0.02]; % compression ratio
+ for i=1:length(ratio);
+     DIM = floor(D*(ratio(i)));
+     RS(DIM+1:end) = 0; % reduce dimensions
+     GS(DIM+1:end) = 0;
+     BS(DIM+1:end) = 0;
+     RSR = sparse(1:D, 1:D, RS, m, n); % reconstruct into matrix
+     GSR = sparse(1:D, 1:D, GS, m, n);
+     BSR = sparse(1:D, 1:D, BS, m, n);
+     RR = RU * RSR * RV'; % recover
+     GR = GU * GSR * GV';
+     BR = BU * BSR * BV';
+     IR = cat(3, RR, GR, BR);
+     IR = uint8(IR);
+     subplot(2,2,i);
+     imshow(IR);title(sprintf('%d%%',ratio(i)*100));
+ end
+ % imwrite(IR, sprintf('lenasvd%02d.png', percent), 'PNG');
+end
