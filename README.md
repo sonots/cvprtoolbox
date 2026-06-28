@@ -35,7 +35,7 @@ You can find examples about how to run functions at there.
 # PROJECTS
 
 You may get interests from my real projects using cvprotoolbox.
-See http://note.sonots.com/SciSoftware.html, and https://github.com/sonots/cvprtoolbox-project.
+See https://github.com/sonots/cvprtoolbox-project.
 
 # LICENSE
 
